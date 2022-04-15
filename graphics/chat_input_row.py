@@ -10,9 +10,8 @@ class ChatInputRow(GridLayout):
         self.cols = 2
         self.message = ChatMessageInput()
         self.add_widget(self.message)
-        self.send_button = ChatButton(ChatInputRow.send_message, "Send")
+        self.send_button = ChatButton(self.send_message, "Send")
         self.add_widget(self.send_button)
 
-    @staticmethod
-    def send_message(self):
-        print("Sending")
+    def send_message(self, _):
+        print(self.message.text)

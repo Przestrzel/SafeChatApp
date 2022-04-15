@@ -9,3 +9,5 @@ class ChatMessageInput(TextInput):
         self.width = Window.size[0] * 0.85
         self.size_hint_x = None
         self.multiline = True
+        self.background_color = (0.9, 0.9, 0.9, 1)
+        self.padding = (12, 10)

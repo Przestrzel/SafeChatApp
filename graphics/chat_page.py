@@ -11,6 +11,7 @@ class ChatPage(GridLayout):
         self.cols = 1
         self.rows = 2
         self.history = ChatHistory()
-        self.add_widget(self.history)
         self.input_row = ChatInputRow()
+        self.add_widget(self.history)
         self.add_widget(self.input_row)
+

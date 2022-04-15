@@ -8,4 +8,4 @@ class ChatHistory(Label):
         super(ChatHistory, self).__init__(**kwargs)
         self.height = Window.size[1]*0.9
         self.size_hint_y = None
-        
+
