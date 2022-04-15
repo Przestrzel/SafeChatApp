@@ -3,8 +3,10 @@ from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.label import Label
 from kivy.core.window import Window
 from kivy.graphics import Color, RoundedRectangle
-
+import random
 MESSAGE_BORDER = 12
+MAX_MESSAGE_LENGTH = 280
+MIN_MESSAGE_LENGTH = 40
 
 
 class ChatHistory(GridLayout):
@@ -16,9 +18,10 @@ class ChatHistory(GridLayout):
         self.rows = 22
         self.size_hint_y = None
         self.row_default_height = 60
+        self.col_default_width = 391
 
     def add_message(self, text):
-        self.add_widget(ChatHistoryMessage(text=text, is_my_message=True))
+        self.add_widget(ChatHistoryMessage(text=text, is_my_message=random.random() > 0.5))
 
 
 class ChatHistoryMessage(AnchorLayout):
@@ -37,8 +40,18 @@ class ChatHistoryMessageLabel(Label):
     def __init__(self, text, is_my_message, **kwargs):
         super(ChatHistoryMessageLabel, self).__init__(**kwargs)
         self.text = text
-        self.border = 50
         self.is_my_message = is_my_message
+        message_length = len(text) * 13
+        if message_length > MAX_MESSAGE_LENGTH:
+            message_length = MAX_MESSAGE_LENGTH
+        elif message_length < MIN_MESSAGE_LENGTH:
+            message_length = MIN_MESSAGE_LENGTH
+
+        self.width = message_length
+        self.text_size = self.size
+        self.padding = [10, 0]
+        self.halign = 'left' if is_my_message else 'right'
+        self.valign = 'center'
         self.color = (0.9, 0.9, 0.9, 1)
         self.size_hint_x = None
 
