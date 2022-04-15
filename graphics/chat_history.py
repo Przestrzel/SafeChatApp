@@ -18,7 +18,6 @@ class ChatHistory(GridLayout):
         self.rows = 22
         self.size_hint_y = None
         self.row_default_height = 60
-        self.col_default_width = 391
 
     def add_message(self, text):
         self.add_widget(ChatHistoryMessage(text=text, is_my_message=random.random() > 0.5))
