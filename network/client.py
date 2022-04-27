@@ -24,4 +24,3 @@ class Client:
             self.add_message(
                 Message(str(data, 'utf-8'), is_my_message=False)
             )
-

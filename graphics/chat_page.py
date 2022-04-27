@@ -2,7 +2,7 @@ from kivy.uix.gridlayout import GridLayout
 from graphics.chat_toolbox import Toolbox
 from graphics.chat_history import ChatHistory
 from graphics.chat_input_row import ChatInputRow
-from connection.client import Client
+from network.client import Client
 from messages.message_stack import MessageStack
 
 
