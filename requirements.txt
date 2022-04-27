@@ -9,3 +9,5 @@ pystache==0.6.0
 requests==2.27.1
 static==1.1.1
 urllib3==1.26.9
+
+rsa~=4.8
