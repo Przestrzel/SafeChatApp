@@ -2,6 +2,7 @@ import socket
 import threading
 from messages.message import Message
 
+
 class Client:
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 

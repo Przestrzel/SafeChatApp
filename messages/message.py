@@ -1,4 +1,3 @@
-
 class Message:
     def __init__(self, text, is_my_message):
         self.text = text

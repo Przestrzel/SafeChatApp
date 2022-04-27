@@ -23,13 +23,6 @@ class Server:
                 if connection == conn:
                     continue
                 connection.send(data.encode())
-                if data:
-                    print(data.encode())
-            # if not data:
-            #     print(str(addr[0]) + ':' + str(addr[1]), " disconnected")
-            #     self.connections.remove(conn)
-            #     conn.close()
-            #     break
 
     def run(self):
         while True:
