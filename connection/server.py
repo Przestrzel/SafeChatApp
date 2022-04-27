@@ -1,5 +1,4 @@
 import socket
-import sys
 import threading
 
 
@@ -21,12 +20,16 @@ class Server:
         while True:
             data = conn.recv(1024).decode('utf-8')
             for connection in self.connections:
+                if connection == conn:
+                    continue
                 connection.send(data.encode())
-            if not data:
-                print(str(addr[0]) + ':' + str(addr[1]), " disconected")
-                self.connections.remove(conn)
-                conn.close()
-                break
+                if data:
+                    print(data.encode())
+            # if not data:
+            #     print(str(addr[0]) + ':' + str(addr[1]), " disconnected")
+            #     self.connections.remove(conn)
+            #     conn.close()
+            #     break
 
     def run(self):
         while True:
@@ -35,6 +38,7 @@ class Server:
             thread.start()
             self.connections.append(conn)
             print(f"[Active connections: {threading.activeCount() - 1}")
+
 
 server = Server()
 server.run()

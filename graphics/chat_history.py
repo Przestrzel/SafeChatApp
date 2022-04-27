@@ -1,9 +1,11 @@
+import threading
+
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.label import Label
 from kivy.core.window import Window
 from kivy.graphics import Color, RoundedRectangle
-import random
+from kivy.clock import Clock
 
 MESSAGE_BORDER = 12
 MAX_MESSAGE_LENGTH = 280
@@ -12,36 +14,44 @@ MIN_MESSAGE_LENGTH = 40
 
 class ChatHistory(GridLayout):
 
-    def __init__(self, **kwargs):
+    def __init__(self, get_message,**kwargs):
         super(ChatHistory, self).__init__(**kwargs)
         self.height = Window.size[1] * 0.9
         self.cols = 1
         self.rows = 22
         self.size_hint_y = None
         self.row_default_height = 60
+        self.get_message = get_message
+        Clock.schedule_interval(self.listen_stack, 0.1)
 
-    def add_message(self, text):
-        self.add_widget(ChatHistoryMessage(text=text, is_my_message=random.random() > 0.5))
+    def add_message(self, message):
+        self.add_widget(ChatHistoryMessage(message))
+
+    def listen_stack(self, dt):
+        message = self.get_message()
+        if len(message) != 0:
+            self.add_message(message)
 
 
 class ChatHistoryMessage(AnchorLayout):
 
-    def __init__(self, text, is_my_message, **kwargs):
+    def __init__(self, message, **kwargs):
         super(ChatHistoryMessage, self).__init__(**kwargs)
-        self.anchor_x = 'left' if is_my_message else 'right'
+        self.anchor_x = 'right' if message.is_my_message else 'left'
         self.anchor_y = 'center'
-        self.padding = [20, 10, 0, 10] if is_my_message else [0, 10, 20, 10]
-        self.message = ChatHistoryMessageLabel(text=text, is_my_message=is_my_message)
+        self.padding = [20, 10, 0, 10] if message.is_my_message else [0, 10, 20, 10]
+        self.message = ChatHistoryMessageLabel(message)
         self.add_widget(self.message)
 
 
 class ChatHistoryMessageLabel(Label):
 
-    def __init__(self, text, is_my_message, **kwargs):
+    def __init__(self, message, **kwargs):
         super(ChatHistoryMessageLabel, self).__init__(**kwargs)
-        self.text = text
-        self.is_my_message = is_my_message
-        message_length = len(text) * 13
+        self.text = message.text
+        self.is_my_message = message.is_my_message
+        message_length = len(self.text) * 13
+
         if message_length > MAX_MESSAGE_LENGTH:
             message_length = MAX_MESSAGE_LENGTH
         elif message_length < MIN_MESSAGE_LENGTH:
@@ -50,7 +60,7 @@ class ChatHistoryMessageLabel(Label):
         self.width = message_length
         self.text_size = self.size
         self.padding = [10, 0]
-        self.halign = 'left' if is_my_message else 'right'
+        self.halign = 'right' if self.is_my_message else 'left'
         self.valign = 'center'
         self.color = (0.9, 0.9, 0.9, 1)
         self.size_hint_x = None

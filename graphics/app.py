@@ -12,6 +12,7 @@ class ChatApp(App):
         self.title = 'SafeChatApp'
         self.chat_page = ChatPage()
         self.history = self.chat_page.history
+        self.input_row = self.chat_page.input_row
 
     def build(self):
         return self.chat_page
