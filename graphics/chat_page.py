@@ -1,4 +1,3 @@
-import kivy
 from kivy.uix.gridlayout import GridLayout
 from graphics.chat_history import ChatHistory
 from graphics.chat_input_row import ChatInputRow
@@ -14,4 +13,3 @@ class ChatPage(GridLayout):
         self.input_row = ChatInputRow(self.history.add_message)
         self.add_widget(self.history)
         self.add_widget(self.input_row)
-

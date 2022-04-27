@@ -9,4 +9,3 @@ class ChatButton(Button):
         self.padding = (12, 10)
         self.font_family = "Roboto"
         self.bind(on_press=callback)
-

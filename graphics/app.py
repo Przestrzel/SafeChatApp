@@ -15,4 +15,3 @@ class ChatApp(App):
 
     def build(self):
         return self.chat_page
-

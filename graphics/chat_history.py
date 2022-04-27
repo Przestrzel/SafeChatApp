@@ -4,6 +4,7 @@ from kivy.uix.label import Label
 from kivy.core.window import Window
 from kivy.graphics import Color, RoundedRectangle
 import random
+
 MESSAGE_BORDER = 12
 MAX_MESSAGE_LENGTH = 280
 MIN_MESSAGE_LENGTH = 40
@@ -13,7 +14,7 @@ class ChatHistory(GridLayout):
 
     def __init__(self, **kwargs):
         super(ChatHistory, self).__init__(**kwargs)
-        self.height = Window.size[1]*0.9
+        self.height = Window.size[1] * 0.9
         self.cols = 1
         self.rows = 22
         self.size_hint_y = None
