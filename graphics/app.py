@@ -11,7 +11,7 @@ class ChatApp(App):
         Window.size = (1024, 768)
         self.title = 'SafeChatApp'
         self.chat_page = ChatPage()
-        self.history = self.chat_page.history
+        self.history = self.chat_page.upper.history
         self.input_row = self.chat_page.input_row
 
     def build(self):

@@ -12,7 +12,7 @@ MIN_MESSAGE_LENGTH = 40
 
 class ChatHistory(GridLayout):
 
-    def __init__(self, get_message,**kwargs):
+    def __init__(self, get_message, **kwargs):
         super(ChatHistory, self).__init__(**kwargs)
         self.height = Window.size[1] * 0.9
         self.cols = 1
@@ -37,7 +37,7 @@ class ChatHistoryMessage(AnchorLayout):
         super(ChatHistoryMessage, self).__init__(**kwargs)
         self.anchor_x = 'right' if message.is_my_message else 'left'
         self.anchor_y = 'center'
-        self.padding = [20, 10, 0, 10] if message.is_my_message else [0, 10, 20, 10]
+        self.padding = [20, 10, 0, 10] if not message.is_my_message else [0, 10, 20, 10]
         self.message = ChatHistoryMessageLabel(message)
         self.add_widget(self.message)
 
@@ -66,8 +66,8 @@ class ChatHistoryMessageLabel(Label):
     def on_size(self, *args):
         self.canvas.before.clear()
         with self.canvas.before:
-            Color(0, 0.8, 0, 0.7) if self.is_my_message else Color(0, 0, 0.8, 0.7)
+            Color(0, 0.8, 0, 0.7) if not self.is_my_message else Color(0, 0, 0.8, 0.7)
             RoundedRectangle(pos=self.pos,
                              size=self.size,
-                             radius=[0, MESSAGE_BORDER, MESSAGE_BORDER, MESSAGE_BORDER] if self.is_my_message
+                             radius=[0, MESSAGE_BORDER, MESSAGE_BORDER, MESSAGE_BORDER] if not self.is_my_message
                              else [MESSAGE_BORDER, 0, MESSAGE_BORDER, MESSAGE_BORDER])
