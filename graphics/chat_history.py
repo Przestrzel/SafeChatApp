@@ -51,7 +51,8 @@ class ChatHistoryMessageLabel(Label):
     def __init__(self, message, **kwargs):
         super(ChatHistoryMessageLabel, self).__init__(**kwargs)
         text = message.text if message.message_type == MessageType.TEXT else {os.path.split(message.text)[1]}
-        self.text = message.text if message.message_type == MessageType.TEXT else f"Plik: {text}"
+        file_prefix = "Przesłano" if message.is_my_message else "Otrzymano"
+        self.text = text if message.message_type == MessageType.TEXT else f"{file_prefix} plik: {text}"
         self.is_my_message = message.is_my_message
         self.message_type = message.message_type
         message_length = len(self.text) * 13
