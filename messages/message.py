@@ -1,5 +1,6 @@
 from utils.enums import MessageType
 
+
 class Message:
     def __init__(self, text, is_my_message, message_type=MessageType.TEXT):
         self.text = text
