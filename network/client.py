@@ -13,8 +13,11 @@ class Client:
         self.receive = threading.Thread(target=self.get_message, daemon=True)
         self.receive.start()
 
-    def send_message(self, text):
-        self.sock.send(bytes(str(text), 'utf-8'))
+    def send_message(self, text, is_text=True):
+        if is_text:
+            self.sock.send(bytes(str(text), 'utf-8'))
+        else:
+            pass
 
     def get_message(self):
         while True:

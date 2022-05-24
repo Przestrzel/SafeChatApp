@@ -27,7 +27,7 @@ class ChatHistory(GridLayout):
 
     def listen_stack(self, dt):
         message = self.get_message()
-        if len(message) != 0:
+        if len(message) > 0:
             self.add_message(message)
 
 

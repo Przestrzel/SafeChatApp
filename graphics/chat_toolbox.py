@@ -7,11 +7,12 @@ from plyer import filechooser
 
 class Toolbox(GridLayout):
 
-    def __init__(self, **kwargs):
+    def __init__(self, send_message, **kwargs):
         super(Toolbox, self).__init__(**kwargs)
         self.cols = 2
         self.rows = 50
         self.row_default_height = 10
+        self.send_message = send_message
 
         self.add_widget(Label(text='EBC'))
         self.ebc = CheckBox(active=True)
@@ -34,6 +35,5 @@ class Toolbox(GridLayout):
     def file_selection(self, _):
         filechooser.open_file(on_selection=self.selected)
 
-    @staticmethod
-    def selected(selection):
-        print(selection)
+    def selected(self, selection):
+        self.send_message(selection[0], is_text=False)
