@@ -1,8 +1,11 @@
+from messages.message import Message
+
+
 class MessageStack:
     def __init__(self):
         self.messages = []
 
-    def push(self, message):
+    def push(self, message: Message):
         self.messages.append(message)
 
     def pop(self):

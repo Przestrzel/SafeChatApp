@@ -1,9 +1,13 @@
+import os
+
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.label import Label
 from kivy.core.window import Window
 from kivy.graphics import Color, RoundedRectangle
 from kivy.clock import Clock
+
+from utils.enums import MessageType
 
 MESSAGE_BORDER = 12
 MAX_MESSAGE_LENGTH = 280
@@ -46,8 +50,10 @@ class ChatHistoryMessageLabel(Label):
 
     def __init__(self, message, **kwargs):
         super(ChatHistoryMessageLabel, self).__init__(**kwargs)
-        self.text = message.text
+        text = message.text if message.message_type == MessageType.TEXT else {os.path.split(message.text)[1]}
+        self.text = message.text if message.message_type == MessageType.TEXT else f"Plik: {text}"
         self.is_my_message = message.is_my_message
+        self.message_type = message.message_type
         message_length = len(self.text) * 13
 
         if message_length > MAX_MESSAGE_LENGTH:

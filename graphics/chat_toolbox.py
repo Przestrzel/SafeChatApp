@@ -4,15 +4,19 @@ from kivy.uix.checkbox import CheckBox
 from graphics.chat_button import ChatButton
 from plyer import filechooser
 
+from messages.message import Message
+from utils.enums import MessageType
+
 
 class Toolbox(GridLayout):
 
-    def __init__(self, send_message, **kwargs):
+    def __init__(self, send_message, add_message, **kwargs):
         super(Toolbox, self).__init__(**kwargs)
         self.cols = 2
         self.rows = 50
         self.row_default_height = 10
         self.send_message = send_message
+        self.add_message = add_message
 
         self.add_widget(Label(text='EBC'))
         self.ebc = CheckBox(active=True)
@@ -37,3 +41,4 @@ class Toolbox(GridLayout):
 
     def selected(self, selection):
         self.send_message(selection[0], is_text=False)
+        self.add_message(Message(selection[0], True, message_type=MessageType.FILE))

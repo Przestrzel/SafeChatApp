@@ -24,6 +24,4 @@ class Client:
             data = self.sock.recv(1024)
             if not data:
                 break
-            self.add_message(
-                Message(str(data, 'utf-8'), is_my_message=False)
-            )
+            self.add_message(Message(str(data, 'utf-8'), is_my_message=False))
