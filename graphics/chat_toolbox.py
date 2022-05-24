@@ -32,7 +32,7 @@ class Toolbox(GridLayout):
         self.ebc.active = not is_active
 
     def file_selection(self, _):
-        smth = filechooser.open_file(on_selection=self.selected)
+        filechooser.open_file(on_selection=self.selected)
 
     @staticmethod
     def selected(selection):

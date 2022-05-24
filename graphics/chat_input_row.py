@@ -20,6 +20,8 @@ class ChatInputRow(GridLayout):
         self.message.text = ''
 
     def send_message_ui(self, _):
-        self.add_message(Message(text=self.message.text, is_my_message=True))
-        self.send_message(self.message.text)
+        if len(self.message.text) > 0:
+            self.add_message(Message(text=self.message.text, is_my_message=True))
+            self.send_message(self.message.text)
+
         self.clear_input()
