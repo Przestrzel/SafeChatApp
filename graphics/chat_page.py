@@ -28,5 +28,6 @@ class ChatPageUpper(GridLayout):
         self.cols = 2
         self.cols_minimum = {0: 800, 1: 200}
         self.history = ChatHistory(get_message)
+        self.toolbox = Toolbox()
         self.add_widget(self.history)
-        self.add_widget(Toolbox())
+        self.add_widget(self.toolbox)

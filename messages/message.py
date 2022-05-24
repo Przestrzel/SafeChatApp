@@ -4,4 +4,4 @@ class Message:
         self.is_my_message = is_my_message
 
     def __len__(self):
-        return len(self.text);
+        return len(self.text)

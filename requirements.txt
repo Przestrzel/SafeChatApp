@@ -11,3 +11,4 @@ static==1.1.1
 urllib3==1.26.9
 
 rsa~=4.8
+plyer~=2.0.0
