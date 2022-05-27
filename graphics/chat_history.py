@@ -29,8 +29,10 @@ class ChatHistory(GridLayout):
         Clock.schedule_interval(self.listen_stack, 0.1)
 
     def add_message(self, message):
-        self.add_widget(ChatHistoryMessage(message))
-        self.load_progress(20)
+        if message.message_type == MessageType.FILE:
+            self.load_progress(20)
+        else:
+            self.add_widget(ChatHistoryMessage(message))
 
     def load_progress(self, value):
         if value > 0:
