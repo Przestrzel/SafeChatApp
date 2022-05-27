@@ -28,6 +28,8 @@ class Toolbox(GridLayout):
         self.add_widget(self.cbc)
         self.cbc.bind(active=self.on_cbc_active)
         self.button = ChatButton(self.file_selection, "Upload file")
+        self.button.size_hint = (.3, .3)
+        self.button.pos_hint = {'x': .3, 'y': .3}
         self.add_widget(self.button)
 
     def on_ebc_active(self, _, is_active):
