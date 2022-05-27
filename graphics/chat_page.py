@@ -32,3 +32,6 @@ class ChatPageUpper(GridLayout):
         self.toolbox = Toolbox(send_message, add_message)
         self.add_widget(self.history)
         self.add_widget(self.toolbox)
+
+    def update_progress_bar(self, value):
+        self.history.load_progress(value)

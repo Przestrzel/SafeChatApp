@@ -6,6 +6,7 @@ from kivy.uix.label import Label
 from kivy.core.window import Window
 from kivy.graphics import Color, RoundedRectangle
 from kivy.clock import Clock
+from graphics.chat_progressbar import ChatProgressBar
 
 from utils.enums import MessageType
 
@@ -24,10 +25,29 @@ class ChatHistory(GridLayout):
         self.size_hint_y = None
         self.row_default_height = 60
         self.get_message = get_message
+        self.progress_bar = ChatProgressBar(value=0)
         Clock.schedule_interval(self.listen_stack, 0.1)
 
     def add_message(self, message):
         self.add_widget(ChatHistoryMessage(message))
+        self.load_progress(20)
+
+    def load_progress(self, value):
+        if value > 0:
+            is_progress_bar_on = False
+            for c in list(self.children):
+                if isinstance(c, ChatProgressBar):
+                    is_progress_bar_on = True
+
+            if not is_progress_bar_on:
+                self.add_widget(self.progress_bar)
+
+        if self.progress_bar.value + value >= 100:
+            for c in list(self.children):
+                if isinstance(c, ChatProgressBar):
+                    self.remove_widget(c)
+
+        self.progress_bar.set_value(self.progress_bar.value + value)
 
     def listen_stack(self, dt):
         message = self.get_message()
