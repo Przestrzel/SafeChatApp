@@ -42,5 +42,6 @@ class Toolbox(GridLayout):
         filechooser.open_file(on_selection=self.selected)
 
     def selected(self, selection):
-        self.send_message(selection[0], is_text=False)
+        if selection:
+            self.send_message(selection[0], is_text=False)
         self.add_message(Message(selection[0], True, message_type=MessageType.FILE))
