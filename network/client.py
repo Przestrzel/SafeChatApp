@@ -21,14 +21,9 @@ class Client:
         if is_text:
             frame = Frame(text, FrameType.TEXT)
             data_bytes = pickle.dumps(frame)
-            # self.sock.send(bytes(str(text), 'utf-8'))
             self.sock.send(data_bytes)
         else:
-            # text is path to file
             _, file_name = os.path.split(text)
-            print(file_name)
-            self.sock.send(bytes(str(file_name), 'utf-8'))
-
             file = open(text, "r")
             data = file.read()
 
@@ -37,9 +32,6 @@ class Client:
             self.sock.send(data_bytes)
             file.close()
 
-            # pass
-
-
     def get_message(self):
         while True:
             data = self.sock.recv(1024)
@@ -47,9 +39,8 @@ class Client:
                 break
             frame = pickle.loads(data)
             if frame.frame_type == FrameType.TEXT:
-                self.add_message(Message(str(frame.data, 'utf-8'), is_my_message=False))
+                self.add_message(Message(str(frame.data), is_my_message=False))
             elif frame.frame_type == FrameType.FILE:
-                with open('downloaded_files/' + frame.file_name, "a+b") as file:
+                with open('downloaded_files/' + frame.file_name, "w+") as file:
                     file.write(frame.data)
-                self.add_message(Message(str('💌 :' + frame.file_name, 'utf-8'), is_my_message=False))
-
+                self.add_message(Message(str('Plik :' + frame.file_name), is_my_message=False))
