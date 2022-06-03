@@ -8,13 +8,13 @@ from messages.message_stack import MessageStack
 
 class ChatPage(GridLayout):
 
-    def __init__(self, **kwargs):
+    def __init__(self, client_name, **kwargs):
         super(ChatPage, self).__init__(**kwargs)
         self.cols = 1
         self.rows = 2
         self.rows_minimum = {0: 650, 1: 100}
         self.message_stack = MessageStack()
-        self.client = Client(add_message=self.message_stack.push)
+        self.client = Client(self.message_stack.push, client_name)
         self.upper = ChatPageUpper(get_message=self.message_stack.pop, send_message=self.client.send_message,
                                    add_message=self.message_stack.push)
         self.input_row = ChatInputRow(self.upper.history.add_message, self.client.send_message)

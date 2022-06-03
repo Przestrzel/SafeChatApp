@@ -10,10 +10,11 @@ from network.frame import Frame, FrameType
 class Client:
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    def __init__(self, add_message):
+    def __init__(self, add_message, client_name):
         self.addr = socket.gethostbyname(socket.gethostname())
         self.sock.connect((self.addr, 10000))
         self.add_message = add_message
+        self.client_name = client_name
         self.receive = threading.Thread(target=self.get_message, daemon=True)
         self.receive.start()
 
@@ -41,6 +42,6 @@ class Client:
             if frame.frame_type == FrameType.TEXT:
                 self.add_message(Message(str(frame.data), is_my_message=False))
             elif frame.frame_type == FrameType.FILE:
-                with open('downloaded_files/' + frame.file_name, "w+") as file:
+                with open(f'data/{self.client_name}/' + frame.file_name, "w+") as file:
                     file.write(frame.data)
                 self.add_message(Message(str('Plik :' + frame.file_name), is_my_message=False))
