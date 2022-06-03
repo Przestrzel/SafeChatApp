@@ -35,6 +35,7 @@ class Client:
             file = open(text, "r")
             data = file.read()
             frame = Frame(data, FrameType.FILE, file_name)
+            # frame = Frame(file_name, FrameType.FILE)
             data_bytes = pickle.dumps(frame)
 
             size_in_4_bytes = struct.pack('I', len(data_bytes))
@@ -48,7 +49,7 @@ class Client:
     def get_message(self):
         size = len(pickle.dumps(Frame(struct.pack('I', 420), FrameType.SIZE)))
         while True:
-            data = self.sock.recv(1024)
+            data = self.sock.recv(size)
             if not data:
                 break
             frame = pickle.loads(data)
