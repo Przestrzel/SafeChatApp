@@ -18,11 +18,11 @@ class Server:
     def handle_client(self, conn, addr):
         print(f"[Connection from: {addr}")
         while True:
-            data = conn.recv(1024)
+            data = conn.recv(4096)
             for connection in self.connections:
                 if connection == conn:
                     continue
-                connection.send(data)
+                connection.sendall(data)
 
     def run(self):
         while True:

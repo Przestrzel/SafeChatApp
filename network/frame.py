@@ -12,4 +12,4 @@ class Frame:
 class FrameType(Enum):
     TEXT = 1
     FILE = 2
-    DISCONNECT = 3
+    SIZE = 3
