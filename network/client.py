@@ -58,8 +58,12 @@ class Client:
                 size = size[0]
             if frame.frame_type == FrameType.TEXT and size is not None:
                 self.add_message(Message(str(frame.data), is_my_message=False))
+
             elif frame.frame_type == FrameType.FILE and size is not None:
                 Path(f'data/{self.client_name}').mkdir(parents=True, exist_ok=True)
+
+            elif frame.frame_type == FrameType.FILE:
                 with open(f'data/{self.client_name}/' + frame.file_name, "w+") as file:
                     file.write(frame.data)
+
                 self.add_message(Message(str('Plik :' + frame.file_name), is_my_message=False))
