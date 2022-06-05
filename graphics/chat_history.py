@@ -29,9 +29,7 @@ class ChatHistory(GridLayout):
         Clock.schedule_interval(self.listen_stack, 0.1)
 
     def add_message(self, message):
-        if message.message_type == MessageType.FILE:
-            self.load_progress(0)
-        else:
+        if message.message_type == MessageType.TEXT:
             self.add_widget(ChatHistoryMessage(message))
 
     def load_progress(self, value):
@@ -44,12 +42,12 @@ class ChatHistory(GridLayout):
             if not is_progress_bar_on:
                 self.add_widget(self.progress_bar)
 
-        if self.progress_bar.value + value >= 100:
+        if value >= 100:
             for c in list(self.children):
                 if isinstance(c, ChatProgressBar):
                     self.remove_widget(c)
 
-        self.progress_bar.set_value(self.progress_bar.value + value)
+        self.progress_bar.set_value(value)
 
     def listen_stack(self, dt):
         message = self.get_message()

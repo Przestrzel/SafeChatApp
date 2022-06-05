@@ -18,7 +18,7 @@ class Server:
     def handle_client(self, conn, addr):
         print(f"[Connection from: {addr}")
         while True:
-            data = conn.recv(4096)
+            data = conn.recv(1024)
             for connection in self.connections:
                 if connection == conn:
                     continue
