@@ -30,7 +30,7 @@ class ChatHistory(GridLayout):
 
     def add_message(self, message):
         if message.message_type == MessageType.FILE:
-            self.load_progress(20)
+            self.load_progress(0)
         else:
             self.add_widget(ChatHistoryMessage(message))
 
