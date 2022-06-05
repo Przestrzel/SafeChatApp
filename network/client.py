@@ -12,11 +12,12 @@ from network.frame import Frame, FrameType
 class Client:
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    def __init__(self, add_message, client_name):
+    def __init__(self, add_message, client_name, update_progress):
         self.addr = socket.gethostbyname(socket.gethostname())
         self.sock.connect((self.addr, 10000))
         self.add_message = add_message
         self.client_name = client_name
+        self.update_progress = update_progress
         self.receive = threading.Thread(target=self.get_message, daemon=True)
         self.receive.start()
 
