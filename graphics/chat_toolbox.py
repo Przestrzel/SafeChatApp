@@ -3,7 +3,7 @@ from kivy.uix.label import Label
 from kivy.uix.checkbox import CheckBox
 from graphics.chat_button import ChatButton
 from plyer import filechooser
-
+from Crypto.Cipher import AES
 from messages.message import Message
 from utils.enums import MessageType
 
@@ -37,6 +37,12 @@ class Toolbox(GridLayout):
 
     def on_cbc_active(self, _, is_active):
         self.ebc.active = not is_active
+
+    def active_mode(self):
+        if self.ebc.active:
+            return AES.MODE_ECB
+        else:
+            return AES.MODE_CBC
 
     def file_selection(self, _):
         filechooser.open_file(on_selection=self.selected)

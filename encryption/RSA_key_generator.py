@@ -1,40 +1,41 @@
 from pathlib import Path
-
-import rsa
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import AES, PKCS1_OAEP
 
 
 class RSAKeygen:
 
     @staticmethod
-    def generate_keys(client_name):
-        (pub_key, priv_key) = rsa.newkeys(1024)
-        Path('keys/{client_name}').mkdir(parents=True, exist_ok=True)
+    def generate_keys(client_name, encrypt):
+        keys = RSA.generate(1024)
+        pub_key = keys.publickey().export_key(format='PEM', passphrase=None, pkcs=1)
+        priv_key = keys.export_key(format='PEM', passphrase=None, pkcs=1)
+        priv_key_encrypted = encrypt(priv_key, AES.MODE_ECB)
+
+        Path(f'keys/{client_name}').mkdir(parents=True, exist_ok=True)
 
         with open(f'keys/{client_name}/pubkey.pem', 'wb') as f:
-            f.write(pub_key.save_pkcs1('PEM'))
+            f.write(pub_key)
 
         with open(f'keys/{client_name}/privkey.pem', 'wb') as f:
-            f.write(priv_key.save_pkcs1('PEM'))
+            f.write(priv_key_encrypted)
 
     @staticmethod
-    def load_keys(client_name):
-        Path('keys/{client_name}').mkdir(parents=True, exist_ok=True)
-
+    def load_keys(client_name, decrypt):
         with open(f'keys/{client_name}/pubkey.pem', 'rb') as f:
-            pubKey = rsa.PublicKey.load_pkcs1(f.read())
+            pub_key = RSA.import_key(f.read())
 
         with open(f'keys/{client_name}/privkey.pem', 'rb') as f:
-            privKey = rsa   .PrivateKey.load_pkcs1(f.read())
-
-        return pubKey, privKey
+            priv_key_encrypted = f.read()
+            priv_key = RSA.import_key(decrypt(priv_key_encrypted, AES.MODE_ECB))
+        return pub_key, priv_key
 
     @staticmethod
     def encrypt(msg, key):
-        return rsa.encrypt(msg.encode('ascii'), key)
+        cipher = PKCS1_OAEP.new(key=key)
+        return cipher.encrypt(msg)
 
     @staticmethod
     def decrypt(ciphertext, key):
-        try:
-            return rsa.decrypt(ciphertext, key).decode('ascii')
-        except KeyError:
-            return False
+        cipher = PKCS1_OAEP.new(key=key)
+        return cipher.decrypt(ciphertext)
