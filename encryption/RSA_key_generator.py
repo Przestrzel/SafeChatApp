@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import rsa
 
 
@@ -6,6 +8,8 @@ class RSAKeygen:
     @staticmethod
     def generate_keys(client_name):
         (pub_key, priv_key) = rsa.newkeys(1024)
+        Path('keys/{client_name}/').mkdir(parents=True, exist_ok=True)
+
         with open(f'keys/{client_name}/pubkey.pem', 'wb') as f:
             f.write(pub_key.save_pkcs1('PEM'))
 
@@ -14,6 +18,8 @@ class RSAKeygen:
 
     @staticmethod
     def load_keys(client_name):
+        Path('keys/{client_name}/').mkdir(parents=True, exist_ok=True)
+
         with open(f'keys/{client_name}/pubkey.pem', 'rb') as f:
             pubKey = rsa.PublicKey.load_pkcs1(f.read())
 
