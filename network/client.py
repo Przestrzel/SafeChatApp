@@ -44,7 +44,6 @@ class Client:
         frame_size = Frame(size_in_4_bytes, FrameType.SIZE)
         data_size = pickle.dumps(frame_size)
         self.sock.sendall(data_size)
-
         self.sock.sendall(data_bytes)
 
         aes_cipher = AESCipher(session_key, False)
@@ -77,8 +76,10 @@ class Client:
                 if not data:
                     break
 
-                self.sock.sendall(data)
-                progress += 1024
+                encrypted_data = aes_cipher.encrypt(data, AES.MODE_ECB)
+                self.sock.sendall(encrypted_data)
+                progress += len(data)
+                print('len(encrypted_data)', len(encrypted_data))
                 self.update_progress(progress / file_size * 100)
 
             file.close()
@@ -109,9 +110,16 @@ class Client:
                 Path(f'data/{self.client_name}').mkdir(parents=True, exist_ok=True)
 
                 with open(f'data/{self.client_name}/' + frame.file_name, "wb") as file:
+                    aes_cipher = AESCipher(self.session_key, False)
                     file_size = frame.data
                     while file_size > 0:
-                        file_data = self.sock.recv(1024)
-                        file_size = file_size - len(file_data)
-                        file.write(file_data)
+                        file_data = self.sock.recv(8192)
+                        if len(file_data) != 1040:
+                            print('file_data', file_data)
+                        try:
+                            decrypted_data = aes_cipher.decrypt(file_data, AES.MODE_ECB)
+                        except:
+                            decrypted_data = file_data
+                        file_size = file_size - len(decrypted_data)
+                        file.write(decrypted_data)
                 self.add_message(Message(str('Plik :' + frame.file_name), is_my_message=False))
