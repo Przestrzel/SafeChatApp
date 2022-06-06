@@ -15,3 +15,4 @@ class FrameType(Enum):
     SIZE = 3
     CONNECTED = 4
     RSA_KEY = 5
+    SESSION_KEY = 6
