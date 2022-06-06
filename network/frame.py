@@ -13,3 +13,5 @@ class FrameType(Enum):
     TEXT = 1
     FILE = 2
     SIZE = 3
+    CONNECTED = 4
+    RSA_KEY = 5

@@ -23,19 +23,21 @@ class RSAKeygen:
     @staticmethod
     def load_keys(client_name, decrypt):
         with open(f'keys/{client_name}/pubkey.pem', 'rb') as f:
-            pub_key = RSA.import_key(f.read())
+            pub_key = f.read()
 
         with open(f'keys/{client_name}/privkey.pem', 'rb') as f:
             priv_key_encrypted = f.read()
-            priv_key = RSA.import_key(decrypt(priv_key_encrypted, AES.MODE_ECB))
+            priv_key = decrypt(priv_key_encrypted, AES.MODE_ECB)
         return pub_key, priv_key
 
     @staticmethod
     def encrypt(msg, key):
-        cipher = PKCS1_OAEP.new(key=key)
+        import_key = RSA.import_key(key)
+        cipher = PKCS1_OAEP.new(key=import_key)
         return cipher.encrypt(msg)
 
     @staticmethod
     def decrypt(ciphertext, key):
-        cipher = PKCS1_OAEP.new(key=key)
+        import_key = RSA.import_key(key)
+        cipher = PKCS1_OAEP.new(key=import_key)
         return cipher.decrypt(ciphertext)

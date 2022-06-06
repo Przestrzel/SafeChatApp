@@ -14,9 +14,6 @@ class ChatApp(App):
         Window.size = (1024, 768)
         self.title = 'SafeChatApp'
         self.chat_page = ChatPage(client_name)
-        self.aes = AESCipher(client_name)
-        RSAKeygen().generate_keys(client_name, self.aes.encrypt)
-        # pub_key, priv_key = RSAKeygen().load_keys(client_name, self.aes.decrypt)
         self.history = self.chat_page.upper.history
         self.input_row = self.chat_page.input_row
 
