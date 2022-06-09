@@ -18,10 +18,10 @@ class Toolbox(GridLayout):
         self.send_message = send_message
         self.add_message = add_message
 
-        self.add_widget(Label(text='EBC'))
-        self.ebc = CheckBox(active=True)
+        self.add_widget(Label(text='ECB'))
+        self.ecb = CheckBox(active=True)
         self.add_widget(self.ebc)
-        self.ebc.bind(active=self.on_ebc_active)
+        self.ecb.bind(active=self.on_ebc_active)
 
         self.add_widget(Label(text='CBC'))
         self.cbc = CheckBox(active=False)
@@ -36,10 +36,10 @@ class Toolbox(GridLayout):
         self.cbc.active = not is_active
 
     def on_cbc_active(self, _, is_active):
-        self.ebc.active = not is_active
+        self.ecb.active = not is_active
 
     def active_mode(self):
-        if self.ebc.active:
+        if self.ecb.active:
             return AES.MODE_ECB
         else:
             return AES.MODE_CBC

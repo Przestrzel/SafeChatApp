@@ -1,33 +1,31 @@
 import socket
 import struct
 import threading
+import os
+import pickle
+from pathlib import Path
 from time import sleep
-
+from network.frame import Frame, FrameType
+from Crypto.Cipher import AES
 from encryption.AESCipher import AESCipher
 from encryption.RSA_key_generator import RSAKeygen
 from encryption.session_key import SessionKey
 from messages.message import Message
-import os
-import pickle
-from pathlib import Path
-from network.frame import Frame, FrameType
-from Crypto.Cipher import AES
-
 
 class Client:
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     def __init__(self, add_message, client_name, update_progress):
         self.aes = AESCipher(client_name)
-        RSAKeygen().generate_keys(client_name, self.aes.encrypt)
-        self.pub_key, self.priv_key = RSAKeygen().load_keys(client_name, self.aes.decrypt)
         self.stranger_key = None
         self.addr = socket.gethostbyname(socket.gethostname())
         self.sock.connect((self.addr, 10000))
         self.add_message = add_message
         self.client_name = client_name
         self.session_key = None
-
+        self.chosen_mode = AES.MODE_ECB
+        RSAKeygen().generate_keys(client_name, self.aes.encrypt, self.chosen_mode)
+        self.pub_key, self.priv_key = RSAKeygen().load_keys(client_name, self.aes.decrypt, self.chosen_mode)
         self.update_progress = update_progress
         self.receive = threading.Thread(target=self.get_message, daemon=True)
         self.receive.start()
@@ -49,7 +47,7 @@ class Client:
         aes_cipher = AESCipher(session_key, False)
         sleep(0.1)
         if is_text:
-            encrypted_text = aes_cipher.encrypt(bytes(text, 'utf-8'), AES.MODE_ECB)
+            encrypted_text = aes_cipher.encrypt(bytes(text, 'utf-8'), self.chosen_mode)
             frame = Frame(encrypted_text, FrameType.TEXT)
             data_bytes = pickle.dumps(frame)
             size_in_4_bytes = struct.pack('I', len(data_bytes))
@@ -76,10 +74,9 @@ class Client:
                 if not data:
                     break
 
-                encrypted_data = aes_cipher.encrypt(data, AES.MODE_ECB)
+                encrypted_data = aes_cipher.encrypt(data, self.chosen_mode)
                 self.sock.sendall(encrypted_data)
                 progress += len(data)
-                print('len(encrypted_data)', len(encrypted_data))
                 self.update_progress(progress / file_size * 100)
 
             file.close()
@@ -100,26 +97,22 @@ class Client:
             elif frame.frame_type == FrameType.RSA_KEY:
                 self.stranger_key = frame.data
             elif frame.frame_type == FrameType.SIZE:
-                size = struct.unpack('I', frame.data)
-                size = size[0]
+                size = struct.unpack('I', frame.data)[0]
             elif frame.frame_type == FrameType.TEXT and size is not None:
                 aes_cipher = AESCipher(self.session_key, False)
-                decrypted_message = aes_cipher.decrypt(frame.data, AES.MODE_ECB)
+                decrypted_message = aes_cipher.decrypt(frame.data, self.chosen_mode)
                 self.add_message(Message(decrypted_message.decode('utf-8'), is_my_message=False))
             elif frame.frame_type == FrameType.FILE and size is not None:
                 Path(f'data/{self.client_name}').mkdir(parents=True, exist_ok=True)
-
                 with open(f'data/{self.client_name}/' + frame.file_name, "wb") as file:
                     aes_cipher = AESCipher(self.session_key, False)
                     file_size = frame.data
                     while file_size > 0:
-                        file_data = self.sock.recv(8192)
-                        if len(file_data) != 1040:
-                            print('file_data', file_data)
+                        file_data = self.sock.recv(1040)
                         try:
-                            decrypted_data = aes_cipher.decrypt(file_data, AES.MODE_ECB)
-                        except:
+                            decrypted_data = aes_cipher.decrypt(file_data, self.chosen_mode)
+                        except ValueError:
                             decrypted_data = file_data
                         file_size = file_size - len(decrypted_data)
                         file.write(decrypted_data)
-                self.add_message(Message(str('Plik :' + frame.file_name), is_my_message=False))
+                self.add_message(Message(str('Plik: ' + frame.file_name), is_my_message=False))
