@@ -13,6 +13,15 @@ GUI provided by Kivy library.
 
 # Setup
 - go to main folder of application
-- run: pip install -r requirements.txt
-- run server by python server.py in one terminal
-- run at least two instances of main.py application with different client names, like python main.py client_name
+- to install required libraries
+```python
+pip install -r requirements.txt
+```
+- run server
+```python
+python server.py
+```
+- run two instances of application
+```python
+python main.py client_name
+```
